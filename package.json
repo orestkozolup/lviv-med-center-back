@@ -2,9 +2,6 @@
   "name": "hero",
   "version": "1.0.0",
   "description": "",
-  "engines": {
-    "node": "10.x"
-  },
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,11 +13,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^7.4.6",
-    "body-parser": "^1.19.0",
-    "dialogflow": "^0.8.2",
-    "express": "^4.17.1",
-    "request": "^2.88.2",
-    "uuid": "^3.4.0"
+    "@sendgrid/mail": "^6.4.0",
+    "body-parser": "^1.18.3",
+    "dialogflow": "^0.5.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "pg": "^7.4.3",
+    "request": "^2.87.0",
+    "uuid": "^3.3.2"
   }
 }
