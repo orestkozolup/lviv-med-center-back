@@ -1,10 +1,10 @@
 module.exports = {
-    FB_PAGE_TOKEN: 'EAAIOZABjY4m0BAKyPur1f6W1Y1HAyxzYmwMXDiB6ZC4qYrB2Q3DfY3ABnzzbNwrYmE3xF8lhzVNjgMbQ3cS7c4WwYNNW91lZCkfQKsRrowbNcHIo3QKnXgAeqCgvu9sIUZB1BDRqZCj0U7H5MoR2lrc4OHU6qeFUGQ1l5uZAgRalWia73rGzqV',
-    FB_VERIFY_TOKEN: 'Taibei101',
-    FB_APP_SECRET: '',
-    SERVER_URL: 'https://lviv-med-center-back.herokuapp.com/',
-    GOOGLE_PROJECT_ID: '',
-    DF_LANGUAGE_CODE: '',
-    GOOGLE_CLIENT_EMAIL: '',
-    GOOGLE_PRIVATE_KEY: ''
+    FB_PAGE_TOKEN: process.env.FB_PAGE_TOKEN,
+    FB_VERIFY_TOKEN: process.env.FB_VERIFY_TOKEN,
+    FB_APP_SECRET: process.env.FB_APP_SECRET,
+    SERVER_URL: process.env.SERVER_URL,
+    GOOGLE_PROJECT_ID: process.env.GOOGLE_PROJECT_ID,
+    DF_LANGUAGE_CODE: process.env.DF_LANGUAGE_CODE,
+    GOOGLE_CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
+    GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY
 };
