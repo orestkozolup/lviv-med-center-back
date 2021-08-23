@@ -35,7 +35,15 @@ if (!config.FB_APP_SECRET) {
 if (!config.SERVER_URL) { //used for ink to static files
     throw new Error('missing SERVER_URL');
 }
-
+if (!config.SENDGRID_API_KEY) {
+    throw new Error('missing SENDGRID_API_KEY');
+}
+if (!config.EMAIL_FROM) {
+    throw new Error('missing EMAIL_FROM');
+}
+if (!config.EMAIL_TO) {
+    throw new Error('missing EMAIL_TO');
+}
 
 
 app.set('port', (process.env.PORT || 5000))
@@ -204,6 +212,62 @@ function handleEcho(messageId, appId, metadata) {
 
 function handleDialogFlowAction(sender, action, messages, contexts, parameters) {
     switch (action) {
+        case "personal_details_action":
+            let filteredContexts = contexts.filter(function (el) {
+                return el.name.includes('personal_details') ||
+                    el.name.includes('personal_details_dialog_context')
+            });
+            if (filteredContexts.length > 0 && contexts[0].parameters) {
+                let user_phone = (fbService.isDefined(contexts[0].parameters.fields['phone'])
+                    && contexts[0].parameters.fields['phone'] != '') ? contexts[0].parameters.fields['phone'].stringValue : '';
+                let user_name = (fbService.isDefined(contexts[0].parameters.fields['name'])
+                    && contexts[0].parameters.fields['name'] != '') ? contexts[0].parameters.fields['name'].stringValue : '';
+                let user_phone = (fbService.isDefined(contexts[0].parameters.fields['age'])
+                    && contexts[0].parameters.fields['age'] != '') ? contexts[0].parameters.fields['age'].stringValue : '';
+                let required_doctor = (fbService.isDefined(contexts[0].parameters.fields['doctor'])
+                    && contexts[0].parameters.fields['doctor'] != '') ? contexts[0].parameters.fields['doctor'].stringValue : '';
+
+                if (user_phone == '' && user_name != '' && user_age != '') {
+                    let emailContent = `A new consultation enquiry from ${user_name}, ${user_age} years old. Required: ${required_doctor}. Client contact: ${user_phone}.`
+                    
+                    sendEmail('New client', emailContent);
+                    handleMessages(messages, sender);
+                } else {
+                    handleMessages(messages, sender);
+                }
+
+                // if (phone_number == '' && user_name != '' && previous_job != '' && years_of_experience == '') {
+
+                //     let replies = [
+                //         {
+                //             "content_type":"text",
+                //             "title":"Less than 1 year",
+                //             "payload":"Less than 1 year"
+                //         },
+                //         {
+                //             "content_type":"text",
+                //             "title":"Less than 10 years",
+                //             "payload":"Less than 10 years"
+                //         },
+                //         {
+                //             "content_type":"text",
+                //             "title":"More than 10 years",
+                //             "payload":"More than 10 years"
+                //         }
+                //     ];
+                //     fbService.sendQuickReply(sender, messages[0].text.text[0], replies);
+                // } else if (phone_number != '' && user_name != '' && previous_job != '' && years_of_experience != ''
+                //     && job_vacancy != '') {
+
+                //     jobApplicationService(phone_number, user_name, previous_job, years_of_experience, job_vacancy);
+
+                //     fbService.handleMessages(messages, sender);
+
+                // } else {
+                //     fbService.handleMessages(messages, sender);
+                // }
+            }
+            break;
         default:
             //unhandled action, just send back the text
             handleMessages(messages, sender);
@@ -846,6 +910,25 @@ function verifyRequestSignature(req, res, buf) {
             throw new Error("Couldn't validate the request signature.");
         }
     }
+}
+
+const sendEmail = (subject, content) => {
+    console.log('SENDING EMAIL!');
+    const sgMail = require('@sendgrid/mail');
+    sgMail.setApiKey(config.SENDGRID_API_KEY);
+    const msg = {
+        to: config.EMAIL_TO,
+        from: config.EMAIL_FROM,
+        subject,
+        text: content,
+        html: content
+    };
+    sgMail.send(msg)
+        .then(() => console.log('EMAIL SENT'))
+        .catch(error => {
+            console.log('EMAIL NOT SENT');
+            console.error(error.toString());
+        });
 }
 
 function isDefined(obj) {
