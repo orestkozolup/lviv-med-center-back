@@ -123,7 +123,7 @@ app.post('/webhook/', function (req, res) {
 
             // Iterate over each messaging event
             pageEntry.messaging.forEach(function (messagingEvent) {
-                console.log('HERE!!!!!!!!!!', config.GOOGLE_PRIVATE_KEY)
+                console.log('HERE!!!!!!!!!!', config.GOOGLE_PRIVATE_KEY, typeof config.GOOGLE_PRIVATE_KEY)
                 if (messagingEvent.optin) {
                     receivedAuthentication(messagingEvent);
                 } else if (messagingEvent.message) {
